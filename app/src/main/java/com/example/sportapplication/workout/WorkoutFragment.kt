@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.sportapplication.R
 import com.example.sportapplication.data.Interval
+import com.example.sportapplication.data.PaceSettings
 import com.example.sportapplication.databinding.FragmentWorkoutBinding
 
 class WorkoutFragment : Fragment() {
@@ -24,6 +25,7 @@ class WorkoutFragment : Fragment() {
     private var goalValue: Float? = null
     private var selectedActivity = "walking"
     private var intervals: List<Interval>? = null
+    private var paceSettings: PaceSettings? = null
 
     // Регистрация Activity Result для получения результата от CreateIntervalWorkoutActivity
     private val createIntervalResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -39,6 +41,21 @@ class WorkoutFragment : Fragment() {
             } else {
                 "Редактировать интервалы"
             }
+        }
+    }
+
+    // Регистрация для темпа
+    private val setPaceResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data = result.data
+            paceSettings = PaceSettings(
+                distance = data?.getDoubleExtra("distance", 0.0) ?: 0.0,
+                pace = data?.getStringExtra("pace") ?: "",
+                interval = data?.getStringExtra("interval") ?: "",
+                tolerance = data?.getIntExtra("tolerance", 0) ?: 0
+            )
+            updateSettingsIndicator()
+            binding.setPaceButton.text = "Редактировать темп"
         }
     }
 
@@ -77,6 +94,7 @@ class WorkoutFragment : Fragment() {
             goalType = null
             goalValue = null
             intervals = null
+            paceSettings = null
             when (checkedId) {
                 R.id.rbNormal -> binding.setGoalButton.visibility = View.VISIBLE
                 R.id.rbInterval -> binding.createIntervalButton.visibility = View.VISIBLE
@@ -99,7 +117,15 @@ class WorkoutFragment : Fragment() {
 
         // Кнопка настройки темпа (заглушка для будущего режима)
         binding.setPaceButton.setOnClickListener {
-            Toast.makeText(context, "Настройка темпа пока не реализована", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), CreateTempoWorkoutActivity::class.java).apply {
+                paceSettings?.let {
+                    putExtra("distance", it.distance)
+                    putExtra("pace", it.pace)
+                    putExtra("interval", it.interval)
+                    putExtra("tolerance", it.tolerance)
+                }
+            }
+            setPaceResult.launch(intent)
         }
 
         // Кнопка старта тренировки
@@ -120,11 +146,31 @@ class WorkoutFragment : Fragment() {
                     intent.putParcelableArrayListExtra("intervals", ArrayList(intervals))
                 }
                 R.id.rbPace -> {
-                    Toast.makeText(context, "Темповой режим пока не реализован", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                    if (paceSettings == null) {
+                        Toast.makeText(context, "Настройте темп тренировки", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    intent.putExtra("distance", paceSettings!!.distance)
+                    intent.putExtra("pace", paceSettings!!.pace)
+                    intent.putExtra("interval", paceSettings!!.interval)
+                    intent.putExtra("tolerance", paceSettings!!.tolerance)
                 }
             }
             startActivity(intent)
+        }
+    }
+
+    private fun updateSettingsIndicator() {
+        binding.settingsIndicator.text = when {
+            paceSettings != null -> "Темп: ${paceSettings!!.pace} на ${paceSettings!!.distance} км"
+            intervals?.isNotEmpty() == true -> "Интервалы: ${intervals!!.size} этапов"
+            goalType != null && goalValue != null -> when (goalType) {
+                "distance" -> "Цель: $goalValue км"
+                "time" -> "Цель: ${goalValue!!.toInt()} мин"
+                "calories" -> "Цель: ${goalValue!!.toInt()} ккал"
+                else -> "Настройки: не выбрано"
+            }
+            else -> "Настройки: не выбрано"
         }
     }
 

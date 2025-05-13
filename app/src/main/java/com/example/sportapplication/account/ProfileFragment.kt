@@ -70,6 +70,11 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), UserDataActivity::class.java))
         }
 
+        // Обрабатываем нажатие на "Мои достижения"
+        view.findViewById<TextView>(R.id.achievements).setOnClickListener {
+            startActivity(Intent(requireContext(), AchievementsActivity::class.java))
+        }
+
         // Обрабатываем нажатие на "Справка"
         view.findViewById<TextView>(R.id.help).setOnClickListener {
             startActivity(Intent(requireContext(), HelpActivity::class.java))

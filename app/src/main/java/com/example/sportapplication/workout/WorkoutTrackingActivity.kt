@@ -133,6 +133,15 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private var intervalStartDistance = 0.0
     private var intervalStartTime: Long = 0L
 
+
+    private var targetPace: String? = null
+    private var targetDistance: Double? = null
+    private var notificationInterval: Double? = null // в км
+    private var paceTolerance: Int? = null // в секундах
+    private var lastNotificationDistance = 0.0 // Последняя дистанция уведомления
+
+    private lateinit var paceStatusTextView: TextView
+
     private val stepListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
             if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
@@ -176,6 +185,11 @@ class WorkoutTrackingActivity : AppCompatActivity() {
 
             updateIntervalProgress(time, totalDistance / 1000)
 
+            // Обновление статуса темпа
+            if (targetPace != null && notificationInterval != null && paceTolerance != null) {
+                updatePaceStatus()
+            }
+
             // Обновляем каждую секунду
             handler.postDelayed(this, 1000)
         }
@@ -211,6 +225,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         intervalCounter = findViewById(R.id.intervalCounter)
         pauseResumeButton = findViewById(R.id.pauseResumeButton)
         stopButton = findViewById(R.id.stopButton)
+        paceStatusTextView = findViewById(R.id.paceStatusTextView)
 
         // Получаем тип активности из Intent и устанавливаем коэффициент
         activityType = intent.getStringExtra("ACTIVITY_TYPE") ?: "walking"
@@ -237,6 +252,17 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         } else if (intervals != null && intervals!!.isNotEmpty()) {
             intervalLayout.visibility = View.VISIBLE
             updateIntervalUI()
+        }
+
+        // Получение настроек темпа из Intent
+        targetPace = intent.getStringExtra("pace")
+        targetDistance = intent.getDoubleExtra("distance", 0.0).takeIf { it > 0 }
+        val intervalStr = intent.getStringExtra("interval")
+        paceTolerance = intent.getIntExtra("tolerance", 0)
+        notificationInterval = intervalStr?.removeSuffix(" км")?.toDoubleOrNull()
+
+        if (targetPace != null && notificationInterval != null && paceTolerance != null) {
+            paceStatusTextView.visibility = View.GONE
         }
 
         // Инициализация шагомера
@@ -345,6 +371,63 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         intervalProgressText.text = "$typeName: 0/${currentInterval.targetDistance.toInt()} м"
         intervalProgressBar.progress = 0
         intervalCounter.text = "Интервал ${currentIntervalIndex + 1} из ${intervals!!.size}"
+    }
+
+    private fun updatePaceStatus() {
+        val distanceInKm = totalDistance / 1000
+        if (distanceInKm >= lastNotificationDistance + notificationInterval!!) {
+            paceStatusTextView.visibility = View.VISIBLE // Делаем видимым при первом уведомлении
+            val currentPace = calculateCurrentPace()
+            val targetPaceInSeconds = parsePaceToSeconds(targetPace!!)
+            val currentPaceInSeconds = parsePaceToSeconds(currentPace)
+
+            val difference = currentPaceInSeconds - targetPaceInSeconds
+
+            val message = when {
+                difference > paceTolerance!! -> "Стоит немного ускориться, текущее запоздание по темпу ${formatDifference(difference)}"
+                difference < -paceTolerance!! -> "Есть возможность немного сбавить темп, текущая спешка по темпу ${formatDifference(-difference)}"
+                else -> "Хорошая поддержка темпа, так держать!"
+            }
+
+            paceStatusTextView.text = message
+
+            // Вибрация
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(500)
+
+            lastNotificationDistance += notificationInterval!!
+        }
+
+        // Проверка завершения дистанции
+        if (targetDistance != null && distanceInKm >= targetDistance!!) {
+            paceStatusTextView.text = "Дистанция завершена!"
+            stopWorkout()
+        }
+    }
+
+    private fun calculateCurrentPace(): String {
+        val timeInMinutes = elapsedTime / 60000.0
+        val distanceInKm = totalDistance / 1000
+        if (distanceInKm > 0) {
+            val paceInMinPerKm = timeInMinutes / distanceInKm
+            val paceMinutes = paceInMinPerKm.toInt()
+            val paceSeconds = ((paceInMinPerKm - paceMinutes) * 60).toInt()
+            return String.format("%d:%02d", paceMinutes, paceSeconds)
+        }
+        return "—"
+    }
+
+    private fun parsePaceToSeconds(pace: String): Int {
+        val parts = pace.split(":")
+        val minutes = parts[0].toInt()
+        val seconds = parts[1].toInt()
+        return minutes * 60 + seconds
+    }
+
+    private fun formatDifference(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%d'%02d\"", minutes, remainingSeconds)
     }
 
     // Проверка разрешений на доступ к геолокации
