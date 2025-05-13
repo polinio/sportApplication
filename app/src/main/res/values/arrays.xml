@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gender_options">
+        <item>Мужской</item>
+        <item>Женский</item>
+        <item>Другой</item>
+        <item>Предпочитаю не указывать</item>
+    </string-array>
+</resources>

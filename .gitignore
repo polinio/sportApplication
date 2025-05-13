@@ -1,0 +1,26 @@
+# Android Studio и IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+gradle.properties
+local.properties
+
+# Firebase
+app/google-services.json
+
+# Нативная сборка
+.externalNativeBuild
+.cxx
+
+# macOS
+.DS_Store
+
+# Скриншоты и записи
+/captures
+
+# Временные файлы
+*.log
+*.cache

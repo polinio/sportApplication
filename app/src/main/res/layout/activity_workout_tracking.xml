@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".workout.WorkoutTrackingActivity">
+
+    <!-- Карта -->
+    <FrameLayout
+        android:id="@+id/mapContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+        <com.yandex.mapkit.mapview.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Карта с маршрутом"/>
+    </FrameLayout>
+
+    <!-- Параметры тренировки -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_background"
+        android:padding="16dp">
+
+        <!-- Прогресс цели -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:id="@+id/goalLayout">
+            <TextView
+                android:id="@+id/goalText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Цель: 0"
+                android:textSize="18sp"
+                android:paddingBottom="4dp"/>
+            <ProgressBar
+                android:id="@+id/goalProgressBar"
+                style="@style/CustomProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"/>
+        </LinearLayout>
+
+        <!-- Контейнер для интервального режима -->
+        <LinearLayout
+            android:id="@+id/intervalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/intervalTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Текущий интервал"
+                android:textSize="16sp"
+                android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/intervalProgressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Разминка: 0/500 м"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp" />
+            <ProgressBar
+                android:id="@+id/intervalProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="100" />
+            <TextView
+                android:id="@+id/intervalCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Интервал 1 из 1"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Расстояние -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Расстояние:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0.0 км"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Длительность -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Длительность:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Калории -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Калории:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/calories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Темп/Скорость -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Темп:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/pace_or_speed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0:00 мин/км"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Кнопки управления -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/pauseResumeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/button_style"
+                android:text="Пауза"
+                android:textColor="@color/blue_border"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Остановить"
+                android:textSize="10sp"
+                android:textColor="@color/blue_border"
+                android:background="@drawable/button_style"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

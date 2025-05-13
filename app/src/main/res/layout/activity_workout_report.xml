@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".workout.WorkoutReportActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <!-- Заголовок -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Отчет о тренировке"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:padding="16dp"/>
+
+        <!-- Активность -->
+        <TextView
+            android:id="@+id/trainingActivityType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="какая то активность"
+            android:textSize="18sp"
+            android:paddingStart="16dp"/>
+
+        <!-- Карта маршрута -->
+        <FrameLayout
+            android:id="@+id/trackMapContainer"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:padding="6dp"/>
+
+        <!-- Дата и время -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Дата и время:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/trainingDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Расстояние -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Расстояние (км):"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/trainingDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Длительность -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Длительность:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/trainingTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Средний темп -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Средний темп (мин/км):"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/trainingPace"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Калории -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Калории:"
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/trainingCalories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <!-- Шаги (для бега/ходьбы) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Шаги:"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/trainingSteps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <!-- Средняя длина шага (для бега/ходьбы) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Средняя длина шага:"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/trainingAverageStepLength"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+        <!-- Заголовок интервалов -->
+        <TextView
+            android:id="@+id/intervalsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Интервалы"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <!-- Список интервалов -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/intervalsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:listitem="@layout/item_interval_report" />
+
+        <!-- Кнопка возврата -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Вернуться"
+            android:textSize="16sp"
+            android:background="@drawable/button_style"
+            android:textColor="@color/blue_500"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

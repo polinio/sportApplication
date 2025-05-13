@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">SportApplication</string>
+    <string name="default_web_client_id">470688747300-qh4crfi6etkujgdlmsdicu7c462tagvo.apps.
+        googleusercontent.com</string>
+
+    <!-- Вопросы для FAQ -->
+    <string name="faq_question_1">Как выбрать тип тренировки?</string>
+    <string name="faq_answer_1">На экране "Тренировка" выберите один из вариантов
+        в разделе "Выберите активность" (Бег, Ходьба, Велосипед). Нажмите "Настроить цель"
+        для установки параметров тренировки, затем используйте кнопку "Старт" для начала.</string>
+
+    <string name="faq_question_2">Как обновить данные профиля?</string>
+    <string name="faq_answer_2">Перейдите в раздел "Профиль" и выберите "Мои данные".
+        Нажмите на поле (например, имя, рост, вес), введите новые данные и подтвердите.
+        Данные сохраняются локально и синхронизируются с сервером при наличии интернета.</string>
+
+    <string name="faq_question_3">Что делать, если я забыл пароль?</string>
+    <string name="faq_answer_3">На экране входа нажмите "Забыли пароль?" (если доступно)
+        или используйте вход через Google. Если проблема сохраняется, свяжитесь с поддержкой
+        по адресу support@example.com.</string>
+
+    <string name="faq_question_4">Как выйти из аккаунта?</string>
+    <string name="faq_answer_4">В разделе "Профиль" прокрутите до пункта "Другое" и выберите
+        "Выйти". Вы будете перенаправлены на экран входа.</string>
+
+    <string name="faq_question_5">Почему мои данные не синхронизируются?</string>
+    <string name="faq_answer_5">Проверьте подключение к интернету. Если вы вносили изменения
+        офлайн, они сохраняются локально и автоматически синхронизируются при подключении.
+        Если проблема сохраняется, перезапустите приложение или обратитесь в поддержку.</string>
+
+    <!-- Строки для AboutActivity -->
+    <string name="app_version">Версия %s (код %d)</string>
+    <string name="app_description">SportApplication помогает вам достигать спортивных целей
+        с помощью удобного отслеживания тренировок, таких как бег, ходьба и езда на велосипеде.</string>
+    <string name="developer_name">Разработано: YourName</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="privacy_policy_url">https://example.com/privacy</string>
+    <string name="terms_of_use">Условия использования</string>
+    <string name="terms_of_use_url">https://example.com/terms</string>
+    <string name="contact_email">support@example.com</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="share_app_text">Попробуйте SportApplication для отслеживания ваших тренировок!
+        https://example.com/app</string>
+    <string name="licenses">Лицензии</string>
+    <string name="licenses_text">Используемые библиотеки:\n- Firebase: Apache License
+        2.0\n- Google Play Services: Apache License 2.0\n- RecyclerView: Apache License
+        2.0\n- CardView: Apache License 2.0</string>
+
+    <!-- Строки для SettingsActivity -->
+    <string name="settings_title">Настройки</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="notifications">Уведомления</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

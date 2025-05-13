@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/icon_home"
+        android:title="Главная" />
+    <item
+        android:id="@+id/navigation_start"
+        android:icon="@drawable/icon_start"
+        android:title="Тренировка" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/icon_profile"
+        android:title="Профиль" />
+
+</menu>

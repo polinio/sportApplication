@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <RadioGroup
+        android:id="@+id/goalRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Расстояние" />
+
+        <RadioButton
+            android:id="@+id/radioTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Время" />
+
+        <RadioButton
+            android:id="@+id/radioCalories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Калории" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <EditText
+            android:id="@+id/goalInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:textSize="12sp"
+            android:inputType="numberDecimal"
+            android:hint="Введите значение" />
+        <TextView
+            android:id="@+id/unitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="км"
+            android:layout_marginStart="8dp"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
