@@ -1,73 +1,290 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Общая статистика"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:padding="6dp">
 
-    <TextView
-        android:id="@+id/totalSteps"
-        android:layout_width="wrap_content"
+        <!-- Общая статистика -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Общая статистика"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_background">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:background="@drawable/rounded_background">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_walk"
+                    android:layout_margin="6sp"/>
+
+                <TextView
+                    android:id="@+id/totalSteps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Всего шагов: 0"
+                    android:padding="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:background="@drawable/rounded_background">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_calories"
+                    android:layout_margin="6sp" />
+
+                <TextView
+                    android:id="@+id/totalCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Всего калорий: 0"
+                    android:padding="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:background="@drawable/rounded_background">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_distance"
+                    android:layout_margin="6sp" />
+
+                <TextView
+                    android:id="@+id/totalDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Всего расстояние: 0 км"
+                    android:padding="12dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+            <!-- Достижения в ходьбе -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Достижения в ходьбе"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:background="@drawable/rounded_background">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_walk"
+                    android:layout_margin="6sp" />
+
+                <TextView
+                    android:id="@+id/maxSteps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Максимальное количество шагов: —"
+                    android:padding="12dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+            <!-- Достижения в беге -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Достижения в беге"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@drawable/rounded_background">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_run"
+                        android:layout_margin="6sp" />
+
+                    <TextView
+                        android:id="@+id/longestRun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Самая длинная пробежка: —"
+                        android:padding="12dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@drawable/rounded_background">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_speed"
+                        android:layout_margin="6sp"/>
+
+                    <TextView
+                        android:id="@+id/bestPace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Самый лучший темп: —"
+                        android:padding="12dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@drawable/rounded_background">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_clock"
+                        android:layout_margin="6sp" />
+
+                    <TextView
+                        android:id="@+id/longestRunTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Самая долгая пробежка: —"
+                        android:padding="12dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        <!-- Достижения в велоспорте -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Достижения в велоспорте"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Всего шагов: 0" />
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_background">
 
-    <TextView
-        android:id="@+id/totalCalories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Всего калорий: 0" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background">
 
-    <TextView
-        android:id="@+id/totalDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Всего расстояние: 0 км" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_bike"
+                android:layout_margin="6sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Достижения в ходьбе"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+            <TextView
+                android:id="@+id/totalCycleDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Всего на велосипеде: —"
+                android:padding="12dp"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/maxSteps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Максимальное количество шагов: —" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Достижения в беге"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_speed"
+                android:layout_margin="6sp" />
 
-    <TextView
-        android:id="@+id/longestRun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Самая длинная пробежка: —" />
+            <TextView
+                android:id="@+id/bestCycleSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Лучшая скорость: —"
+                android:padding="12dp"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/bestPace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Самый лучший темп: —" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background">
 
-    <TextView
-        android:id="@+id/longestRunTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Самая долгая пробежка: —" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_clock"
+                android:layout_margin="6sp" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/longestCycle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Самая длинная поездка: —"
+                android:padding="12dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+</ScrollView>

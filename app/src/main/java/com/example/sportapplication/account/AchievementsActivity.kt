@@ -25,6 +25,9 @@ class AchievementsActivity : AppCompatActivity() {
     private lateinit var longestRunTextView: TextView
     private lateinit var bestPaceTextView: TextView
     private lateinit var longestRunTimeTextView: TextView
+    private lateinit var longestCycleTextView: TextView
+    private lateinit var bestCycleSpeedTextView: TextView
+    private lateinit var totalCycleDistanceTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,9 @@ class AchievementsActivity : AppCompatActivity() {
         longestRunTextView = findViewById(R.id.longestRun)
         bestPaceTextView = findViewById(R.id.bestPace)
         longestRunTimeTextView = findViewById(R.id.longestRunTime)
+        longestCycleTextView = findViewById(R.id.longestCycle)
+        bestCycleSpeedTextView = findViewById(R.id.bestCycleSpeed)
+        totalCycleDistanceTextView = findViewById(R.id.totalCycleDistance)
 
         val userId = firebaseAuth.currentUser?.uid ?: return
         database.child("users").child(userId).child("workouts")
@@ -54,6 +60,11 @@ class AchievementsActivity : AppCompatActivity() {
                     var bestPaceDate = ""
                     var longestRunTime = 0L
                     var longestRunTimeDate = ""
+                    var longestCycle = 0.0
+                    var longestCycleDate = ""
+                    var bestCycleSpeed = 0.0
+                    var bestCycleSpeedDate = ""
+                    var totalCycleDistance = 0.0
 
                     for (workoutSnapshot in snapshot.children) {
                         val activityType = workoutSnapshot.child("activityType").getValue(String::class.java) ?: ""
@@ -92,6 +103,19 @@ class AchievementsActivity : AppCompatActivity() {
                                 longestRunTimeDate = formatDate(timestamp)
                             }
                         }
+                        // Достижения в велоспорте
+                        else if (activityType == "cycling") {
+                            totalCycleDistance += distance
+                            if (distance > longestCycle) {
+                                longestCycle = distance
+                                longestCycleDate = formatDate(timestamp)
+                            }
+                            val speed = calculateSpeed(parsePaceToSeconds(avgPace))
+                            if (speed > bestCycleSpeed && distance >= 5.0) {
+                                bestCycleSpeed = speed
+                                bestCycleSpeedDate = formatDate(timestamp)
+                            }
+                        }
                     }
 
                     // Отображение общей статистики
@@ -114,6 +138,17 @@ class AchievementsActivity : AppCompatActivity() {
                     longestRunTimeTextView.text = if (longestRunTime > 0) {
                         "Самая долгая пробежка: ${formatTime(longestRunTime)} ($longestRunTimeDate)"
                     } else "Самая долгая пробежка: —"
+
+                    // Отображение достижений в велоспорте
+                    totalCycleDistanceTextView.text = if (totalCycleDistance > 0) {
+                        "Всего на велосипеде: ${String.format("%.2f", totalCycleDistance)} км"
+                    } else "Всего на велосипеде: —"
+                    longestCycleTextView.text = if (longestCycle > 0) {
+                        "Самая длинная поездка: ${String.format("%.2f", longestCycle)} км ($longestCycleDate)"
+                    } else "Самая длинная поездка: —"
+                    bestCycleSpeedTextView.text = if (bestCycleSpeed > 0) {
+                        "Лучшая скорость: ${String.format("%.1f", bestCycleSpeed)} км/ч ($bestCycleSpeedDate)"
+                    } else "Лучшая скорость: —"
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -134,6 +169,12 @@ class AchievementsActivity : AppCompatActivity() {
         val minutes = parts[0].toIntOrNull() ?: return Int.MAX_VALUE
         val seconds = parts[1].toIntOrNull() ?: return Int.MAX_VALUE
         return minutes * 60 + seconds
+    }
+
+    private fun calculateSpeed(paceInSeconds: Int): Double {
+        if (paceInSeconds == Int.MAX_VALUE || paceInSeconds == 0) return 0.0
+        // Скорость = 3600 / темп в секундах (перевод в км/ч)
+        return 3600.0 / paceInSeconds
     }
 
     private fun formatPace(seconds: Int): String {
