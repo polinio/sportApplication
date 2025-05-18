@@ -147,14 +147,14 @@ class WorkoutReportActivity : AppCompatActivity() {
                 setIcon(ImageProvider.fromResource(this@WorkoutReportActivity, R.drawable.ic_start))
                 setIconStyle(IconStyle().apply {
                     anchor = PointF(0.5f, 1.0f)
-                    scale = 1.5f
+                    scale = 3f
                 })
             }
             mapObjects.addPlacemark(points.last()).apply {
                 setIcon(ImageProvider.fromResource(this@WorkoutReportActivity, R.drawable.ic_finish))
                 setIconStyle(IconStyle().apply {
                     anchor = PointF(0.5f, 1.0f)
-                    scale = 1.5f
+                    scale = 3f
                 })
             }
             if (points.size > 1) {

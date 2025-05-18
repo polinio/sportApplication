@@ -24,14 +24,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //
+        // Инициализация FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance()
 
-        //
+        // Настройка Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -62,6 +61,22 @@ class LoginActivity : AppCompatActivity() {
                 registerUser(email, password)
             } else {
                 Toast.makeText(this, "Введите email и пароль!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.forgotPassword.setOnClickListener {
+            val email = binding.email.text.toString().trim()
+            if (email.isNotEmpty()) {
+                firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Письмо для сброса пароля отправлено", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Ошибка: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            } else {
+                Toast.makeText(this, "Введите email", Toast.LENGTH_SHORT).show()
             }
         }
 

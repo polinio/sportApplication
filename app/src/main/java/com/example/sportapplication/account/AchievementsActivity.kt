@@ -180,7 +180,7 @@ class AchievementsActivity : AppCompatActivity() {
     private fun formatPace(seconds: Int): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
-        return String.format("%d:%02d", minutes, remainingSeconds)
+        return String.format("%d'%02d\"", minutes, remainingSeconds)
     }
 
     private fun formatTime(ms: Long): String {

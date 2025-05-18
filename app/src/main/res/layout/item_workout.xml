@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/block2"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_marginTop="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="@drawable/rounded_background">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white"
+    android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/workoutTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Бег, 01 января 00:00"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/workoutDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00 км, 00:00:00, 0.0"
-        android:textSize="16sp" />
+        <!-- Иконка активности -->
+        <ImageView
+            android:id="@+id/workout_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:tint="@color/blue_500" />
 
-</LinearLayout>
+        <!-- Контейнер для текста -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Заголовок (тип активности и дата) -->
+            <TextView
+                android:id="@+id/workoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Бег, 12 октября 14:30"
+                android:textColor="@color/blue_500"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Подробности (дистанция, длительность, темп) -->
+            <TextView
+                android:id="@+id/workoutDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="5.00 км, 00:30:00, 6:00/км"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

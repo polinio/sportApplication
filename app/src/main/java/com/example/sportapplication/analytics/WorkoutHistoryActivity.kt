@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,7 +75,7 @@ class WorkoutHistoryActivity : AppCompatActivity() {
                 workouts.sortByDescending { it.timestamp }
 
                 if (workouts.isEmpty()) {
-                    loadingTextView.text = "Нет тренировок"
+                    loadingTextView.text = "У вас пока нет тренировок"
                     loadingTextView.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
                 } else {
@@ -101,6 +102,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
     class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.workoutTitle)
         val detailsTextView: TextView = itemView.findViewById(R.id.workoutDetails)
+        val iconImageView: ImageView = itemView.findViewById(R.id.workout_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -113,6 +115,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
         val workout = workouts.getOrNull(position) ?: run {
             holder.titleTextView.text = "Ошибка: данные отсутствуют"
             holder.detailsTextView.text = ""
+            holder.iconImageView.setImageResource(R.drawable.ic_walk)
             return
         }
         val activityType = formatActivityType(workout.activityType)
@@ -121,8 +124,17 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
 
         val distance = formatDistance(workout.distance)
         val duration = formatDuration(workout.duration)
-        val pace = workout.avgPace
+        val pace = formatPace(workout.avgPace)
         holder.detailsTextView.text = "$distance, $duration, $pace"
+
+        // Установка иконки в зависимости от типа активности
+        holder.iconImageView.setImageResource(
+            when (workout.activityType) {
+                "running" -> R.drawable.ic_run
+                "cycling" -> R.drawable.ic_bike
+                else -> R.drawable.ic_walk
+            }
+        )
     }
 
     override fun getItemCount(): Int = workouts.size
@@ -153,5 +165,21 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
 
     private fun formatDistance(distance: Double): String {
         return String.format("%.2f км", distance)
+    }
+
+    private fun formatPace(pace: String?): String {
+        if (pace.isNullOrEmpty() || pace == "—") return "—"
+        return try {
+            // Предполагаем, что pace в формате мм:сс
+            val parts = pace.split(":")
+            if (parts.size != 2) return "—"
+            val minutes = parts[0]
+            val seconds = parts[1]
+            // Преобразуем в мм"сс'
+            "$minutes'$seconds\""
+        } catch (e: Exception) {
+            Log.e("WorkoutHistory", "Error formatting pace: $pace", e)
+            "—"
+        }
     }
 }
