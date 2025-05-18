@@ -21,6 +21,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PointF
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -35,13 +36,13 @@ import androidx.core.app.ActivityCompat
 import com.example.sportapplication.data.Interval
 import com.example.sportapplication.data.IntervalDTO
 import com.example.sportapplication.data.IntervalType
-import com.example.sportapplication.data.Workout
 import com.example.sportapplication.data.WorkoutDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polyline
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.map.PolylineMapObject
 import com.yandex.runtime.image.ImageProvider
@@ -64,6 +65,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private lateinit var polyline: PolylineMapObject
     private val routePoints = mutableListOf<Point>()
     private var startMarker: PlacemarkMapObject? = null
+    private var currentLocationMarker: PlacemarkMapObject? = null
 
     // Объект для получения местоположения
     private val locationCallback = object : LocationCallback() {
@@ -521,19 +523,29 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         // Создаём точку на карте
         val userLocation = Point(latitude, longitude)
 
-        // Если маркер ещё не установлен, создаём его
-        if (startMarker == null) {
-            startMarker = mapView.mapWindow.map.mapObjects.addPlacemark(
+        // Обновляем или создаем маркер текущей локации
+        if (currentLocationMarker == null) {
+            currentLocationMarker = mapView.mapWindow.map.mapObjects.addPlacemark(
                 userLocation,
-                ImageProvider.fromResource(this, R.drawable.icon_location_marker)
-            )
+                ImageProvider.fromResource(this, R.drawable.ic_location_dot_vector)
+            ).apply {
+                setIconStyle(IconStyle().apply {
+                    anchor = PointF(0.5f, 0.5f)
+                    scale = 0.04f
+                })
+                zIndex = 10f // Выше маршрута и начальной точки
+            }
+            Log.d("WorkoutTracking", "Current location marker created at $latitude, $longitude")
+        } else {
+            currentLocationMarker?.geometry = userLocation
+            Log.d("WorkoutTracking", "Current location marker updated to $latitude, $longitude")
         }
         // Центрируем камеру на текущем местоположении
         val cameraPosition = CameraPosition(userLocation, 16.0f, 0.0f, 0.0f)  // Масштаб
         mapView.mapWindow.map.move(cameraPosition)
 
         // Показываем маркер
-        startMarker!!.isVisible = true
+        currentLocationMarker!!.isVisible = true
     }
 
     // Функция для обновления маршрута
@@ -561,7 +573,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         } else {
             // Иначе создаём новый маршрут
             polyline = mapView.mapWindow.map.mapObjects.addPolyline(Polyline(routePoints)).apply {
-                strokeWidth = 5f  // Толщина линии
+                strokeWidth = 4f  // Толщина линии
                 setStrokeColor(Color.BLUE)  // Цвет маршрута
             }
         }
