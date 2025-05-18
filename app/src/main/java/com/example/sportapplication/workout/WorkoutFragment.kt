@@ -37,7 +37,7 @@ class WorkoutFragment : Fragment() {
                 "Интервалы: ${intervals!!.size} этапов"
             }
             binding.createIntervalButton.text = if (intervals.isNullOrEmpty()) {
-                "Создать тренировку"
+                "Настроить интервалы"
             } else {
                 "Редактировать интервалы"
             }
@@ -95,6 +95,9 @@ class WorkoutFragment : Fragment() {
             goalValue = null
             intervals = null
             paceSettings = null
+            binding.setGoalButton.text = "Настроить цель"
+            binding.createIntervalButton.text = "Настроить интервалы"
+            binding.setPaceButton.text = "Настроить темп"
             when (checkedId) {
                 R.id.rbNormal -> binding.setGoalButton.visibility = View.VISIBLE
                 R.id.rbInterval -> binding.createIntervalButton.visibility = View.VISIBLE
@@ -160,6 +163,7 @@ class WorkoutFragment : Fragment() {
         }
     }
 
+    // Обновление текста индикатора настроек
     private fun updateSettingsIndicator() {
         binding.settingsIndicator.text = when {
             paceSettings != null -> "Темп: ${paceSettings!!.pace} на ${paceSettings!!.distance} км"
@@ -181,10 +185,25 @@ class WorkoutFragment : Fragment() {
         val unitText: TextView = dialogView.findViewById(R.id.unitText)
 
         // Устанавливаем начальные значения
-        goalRadioGroup.check(R.id.radioDistance)
-        goalInput.hint = "Введите значение от 0,1 до 100 км"
-        goalInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-        unitText.text = "км"
+//        goalRadioGroup.check(R.id.radioDistance)
+//        goalInput.hint = "Введите значение от 0,1 до 100 км"
+//        goalInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+//        unitText.text = "км"
+
+        // Устанавливаем значения, если они уже есть
+        goalType?.let {
+            when (it) {
+                "distance" -> goalRadioGroup.check(R.id.radioDistance)
+                "time" -> goalRadioGroup.check(R.id.radioTime)
+                "calories" -> goalRadioGroup.check(R.id.radioCalories)
+            }
+            goalInput.setText(goalValue?.toString() ?: "")
+        } ?: run {
+            goalRadioGroup.check(R.id.radioDistance)
+            goalInput.hint = "Введите значение от 0,1 до 100 км"
+            goalInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            unitText.text = "км"
+        }
 
         // Обновляем hint и inputType при выборе цели
         goalRadioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -230,30 +249,33 @@ class WorkoutFragment : Fragment() {
                         if (inputValue in 0.1f..100f) {
                             goalType = "distance"
                             goalValue = inputValue
-                            binding.setGoalButton.text = "Цель: $inputValue км"
-                            binding.settingsIndicator.text = "Цель: $inputValue км"
+                            binding.setGoalButton.text = "Редактировать цель"
+                            updateSettingsIndicator()
                         } else {
-                            Toast.makeText(context, "Расстояние должно быть от 0,1 до 100 км", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Расстояние должно быть от 0,1 до 100 км",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                     R.id.radioTime -> {
                         if (inputValue in 10f..1440f && inputValue % 1 == 0f) {
                             goalType = "time"
                             goalValue = inputValue
-                            binding.setGoalButton.text = "Цель: ${inputValue.toInt()} мин"
-                            binding.settingsIndicator.text = "Цель: ${inputValue.toInt()} мин"
+                            binding.setGoalButton.text = "Редактировать цель"
+                            updateSettingsIndicator()
                         } else {
-                            Toast.makeText(context, "Время должно быть от 10 до 1440 минут (целое число)", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Время должно быть от 10 до 1440 минут (целое число)",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                     R.id.radioCalories -> {
                         if (inputValue in 100f..5000f && inputValue % 1 == 0f) {
                             goalType = "calories"
                             goalValue = inputValue
-                            binding.setGoalButton.text = "Цель: ${inputValue.toInt()} ккал"
-                            binding.settingsIndicator.text = "Цель: ${inputValue.toInt()} ккал"
+                            binding.setGoalButton.text = "Редактировать цель"
+                            updateSettingsIndicator()
                         } else {
-                            Toast.makeText(context, "Калории должны быть от 100 до 5000 (целое число)", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Калории должны быть от 100 до 5000 (целое число)",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

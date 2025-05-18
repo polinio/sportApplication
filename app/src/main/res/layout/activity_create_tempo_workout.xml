@@ -13,13 +13,35 @@
         android:inputType="numberDecimal"
         android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/paceEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Темп (мин:сек на км, например, 5:30)"
-        android:inputType="text"
-        android:minHeight="48dp" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/paceMinutesEditText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="минут"
+            android:inputType="number"
+            android:minHeight="48dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/paceSecondsEditText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="секунд"
+            android:inputType="number"
+            android:minHeight="48dp"/>
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/intervalSpinner"

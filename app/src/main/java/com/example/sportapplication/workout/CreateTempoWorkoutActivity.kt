@@ -12,7 +12,8 @@ import com.example.sportapplication.R
 
 class CreateTempoWorkoutActivity : AppCompatActivity() {
     private lateinit var distanceEditText: EditText
-    private lateinit var paceEditText: EditText
+    private lateinit var paceMinutesEditText: EditText
+    private lateinit var paceSecondsEditText: EditText
     private lateinit var intervalSpinner: Spinner
     private lateinit var toleranceEditText: EditText
 
@@ -21,12 +22,13 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_tempo_workout)
 
         distanceEditText = findViewById(R.id.distanceEditText)
-        paceEditText = findViewById(R.id.paceEditText)
+        paceMinutesEditText = findViewById(R.id.paceMinutesEditText)
+        paceSecondsEditText = findViewById(R.id.paceSecondsEditText)
         intervalSpinner = findViewById(R.id.intervalSpinner)
         toleranceEditText = findViewById(R.id.toleranceEditText)
 
         // Настройка Spinner для интервалов
-        val intervals = arrayOf("1 км", "2 км", "5 км")
+        val intervals = arrayOf("0,5 км", "1 км", "2 км", "5 км")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, intervals)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         intervalSpinner.adapter = adapter
@@ -42,7 +44,11 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
                 distanceEditText.setText(distance.toString())
             }
             if (pace.isNotEmpty()) {
-                paceEditText.setText(pace)
+                val paceParts = pace.split(":")
+                if (paceParts.size == 2) {
+                    paceMinutesEditText.setText(paceParts[0])
+                    paceSecondsEditText.setText(paceParts[1])
+                }
             }
             if (interval.isNotEmpty()) {
                 val intervalIndex = intervals.indexOf(interval)
@@ -57,7 +63,8 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.saveButton).setOnClickListener {
             val distance = distanceEditText.text.toString().toDoubleOrNull()
-            val pace = paceEditText.text.toString()
+            val minutes = paceMinutesEditText.text.toString().toIntOrNull()
+            val seconds = paceSecondsEditText.text.toString().toIntOrNull()
             val interval = intervalSpinner.selectedItem.toString()
             val tolerance = toleranceEditText.text.toString().toIntOrNull()
 
@@ -66,8 +73,8 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
                 Toast.makeText(this, "Введите корректную дистанцию (> 0 км)", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (!pace.matches(Regex("\\d+:\\d{2}"))) {
-                Toast.makeText(this, "Введите темп в формате мин:сек (например, 5:30)", Toast.LENGTH_SHORT).show()
+            if (minutes == null || seconds == null || seconds !in 0..59) {
+                Toast.makeText(this, "Введите корректный темп (минуты и секунды 0-59)", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (tolerance == null || tolerance < 0) {
@@ -75,6 +82,7 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val pace = String.format("%d:%02d", minutes, seconds)
             val intent = Intent().apply {
                 putExtra("distance", distance)
                 putExtra("pace", pace)

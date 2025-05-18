@@ -99,6 +99,8 @@ class IntervalAdapter(
     private val onDelete: (Int) -> Unit
 ) : RecyclerView.Adapter<IntervalAdapter.IntervalViewHolder>() {
 
+    private val russianTypes = arrayOf("Разминка", "Ускорение", "Отдых", "Заминка")
+
     class IntervalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val typeSpinner: Spinner = itemView.findViewById(R.id.intervalTypeSpinner)
         val distanceEditText: EditText = itemView.findViewById(R.id.distanceEditText)
@@ -115,27 +117,43 @@ class IntervalAdapter(
         val interval = intervals[position]
 
         // Настройка Spinner
-        val types = IntervalType.values().map { it.name }
+//        val types = IntervalType.values().map { it.name }
         val spinnerAdapter = ArrayAdapter(
             holder.itemView.context,
             android.R.layout.simple_spinner_item,
-            types
+            russianTypes
         )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         holder.typeSpinner.adapter = spinnerAdapter
-        holder.typeSpinner.setSelection(interval.type.ordinal)
+//        holder.typeSpinner.setSelection(interval.type.ordinal)
+        val currentTypeIndex = when (interval.type) {
+            IntervalType.WARMUP -> 0
+            IntervalType.ACCELERATION -> 1
+            IntervalType.REST -> 2
+            IntervalType.COOLDOWN -> 3
+        }
+        holder.typeSpinner.setSelection(currentTypeIndex)
 
         // Обновление типа интервала
         holder.typeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                intervals[position] = intervals[position].copy(type = IntervalType.values()[pos])
+                val selectedType = when (pos) {
+                    0 -> IntervalType.WARMUP
+                    1 -> IntervalType.ACCELERATION
+                    2 -> IntervalType.REST
+                    3 -> IntervalType.COOLDOWN
+                    else -> IntervalType.WARMUP
+                }
+                intervals[position] = intervals[position].copy(type = selectedType)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
         // Настройка расстояния
-        holder.distanceEditText.setText(if (interval.targetDistance == 0.0) "" else interval.targetDistance.toString())
+        holder.distanceEditText.setText(if (interval.targetDistance == 0.0) ""
+        else interval.targetDistance.toString())
+
         holder.distanceEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
