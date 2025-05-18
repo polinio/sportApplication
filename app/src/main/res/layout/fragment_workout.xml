@@ -184,9 +184,9 @@
     <!-- Кнопка старта тренировки -->
     <ImageButton
         android:id="@+id/startButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/icon_play"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_start_vector"
         android:contentDescription="Старт"
         android:backgroundTint="@color/gray"
         android:padding="16dp"
