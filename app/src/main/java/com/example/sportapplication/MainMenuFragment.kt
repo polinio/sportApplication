@@ -263,7 +263,7 @@ class MainMenuFragment : Fragment() {
         }
 
         val formattedTotalHours = ceil(totalHours * 10) / 10
-        totalTrainingTime.text = "$formattedTotalHours часов"
+        totalTrainingTime.text = "$formattedTotalHours ч"
 
         val entries = dataByDay.entries.mapIndexed { index, entry ->
             BarEntry(index.toFloat(), entry.value)

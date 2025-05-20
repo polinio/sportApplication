@@ -44,7 +44,8 @@
             android:layout_height="wrap_content"
             android:text="Бег"
             android:textSize="14sp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:buttonTint="@color/blue_500"/>
 
         <RadioButton
             android:id="@+id/rbWalking"
@@ -52,7 +53,8 @@
             android:layout_height="wrap_content"
             android:text="Ходьба"
             android:textSize="14sp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:buttonTint="@color/blue_500"/>
 
         <RadioButton
             android:id="@+id/rbCycling"
@@ -60,7 +62,8 @@
             android:layout_height="wrap_content"
             android:text="Велосипед"
             android:textSize="14sp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:buttonTint="@color/blue_500"/>
     </RadioGroup>
 
     <!-- Выбор режима тренировки -->
@@ -90,7 +93,8 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="12sp"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:buttonTint="@color/blue_500"/>
 
         <RadioButton
             android:id="@+id/rbInterval"
@@ -101,7 +105,8 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="12sp"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:buttonTint="@color/blue_500"/>
 
         <RadioButton
             android:id="@+id/rbPace"
@@ -112,7 +117,8 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="12sp"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:buttonTint="@color/blue_500"/>
     </RadioGroup>
 
     <!-- Контейнер для кнопок настройки -->

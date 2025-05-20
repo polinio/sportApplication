@@ -28,7 +28,7 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
         toleranceEditText = findViewById(R.id.toleranceEditText)
 
         // Настройка Spinner для интервалов
-        val intervals = arrayOf("0,5 км", "1 км", "2 км", "5 км")
+        val intervals = arrayOf("0,1 км","0,5 км", "1 км", "2 км", "5 км")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, intervals)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         intervalSpinner.adapter = adapter

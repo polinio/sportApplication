@@ -28,6 +28,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.os.Vibrator
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -71,17 +72,17 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.locations.forEach { location ->
-                updateMap(location.latitude, location.longitude)  // Центрируем камеру
-                updateRoute(location.latitude, location.longitude)  // Добавляем точку маршрута
+                updateMap(location.latitude, location.longitude)
+                updateRoute(location.latitude, location.longitude)
             }
         }
     }
 
     // Элементы интерфейса для тренировки
-    private lateinit var durationTextView: TextView // TextView для отображения длительности тренировки
-    private lateinit var caloriesTextView: TextView // TextView для отображения калорий
-    private lateinit var distanceTextView: TextView  // TextView для отображения дистанции
-    private lateinit var paceTextView: TextView // TextView для отображения темпа
+    private lateinit var durationTextView: TextView
+    private lateinit var caloriesTextView: TextView
+    private lateinit var distanceTextView: TextView
+    private lateinit var paceTextView: TextView
 
     // Элементы интерфейса для отображения цели
     private lateinit var goalTextView: TextView
@@ -97,10 +98,10 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private lateinit var pauseResumeButton: Button
     private lateinit var stopButton: Button
 
-    // обработки паузы и остановки
-    private var isPaused = false  // Состояние тренировки (на паузе или нет)
-    private var lastLocationWhenPaused: Location? = null  // Последнее местоположение при паузе
-    private var isLocationUpdatesActive = false  // Для управления активностью обновлений
+    // Обработка паузы и остановки
+    private var isPaused = false
+    private var lastLocationWhenPaused: Location? = null
+    private var isLocationUpdatesActive = false
 
     // Таймер
     private var startTime: Long = 0L
@@ -111,7 +112,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     // Время начала тренировки
     private var trainingStartTime: Long = 0L
 
-    // Расчёта калорий в зависимости от активности
+    // Расчёт калорий в зависимости от активности
     private var caloriesPerMilli: Double = 0.0
     private var totalCalories = 0.0
     private var totalDistance = 0.0
@@ -135,7 +136,6 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private var intervalStartDistance = 0.0
     private var intervalStartTime: Long = 0L
 
-
     private var targetPace: String? = null
     private var targetDistance: Double? = null
     private var notificationInterval: Double? = null // в км
@@ -143,6 +143,9 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     private var lastNotificationDistance = 0.0 // Последняя дистанция уведомления
 
     private lateinit var paceStatusTextView: TextView
+
+    private lateinit var textToSpeech: TextToSpeech
+
 
     private val stepListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
@@ -208,6 +211,13 @@ class WorkoutTrackingActivity : AppCompatActivity() {
             insets
         }
 
+        textToSpeech = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech.language = Locale("ru") // или Locale.US для английского
+            }
+        }
+
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         sensorManager = getSystemService(SensorManager::class.java)
         checkLocationPermission()
@@ -261,10 +271,18 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         targetDistance = intent.getDoubleExtra("distance", 0.0).takeIf { it > 0 }
         val intervalStr = intent.getStringExtra("interval")
         paceTolerance = intent.getIntExtra("tolerance", 0)
-        notificationInterval = intervalStr?.removeSuffix(" км")?.toDoubleOrNull()
+        // Удаление " км" и замена запятой на точку
+        notificationInterval = intervalStr?.removeSuffix(" км")?.replace(",", ".")?.toDoubleOrNull()
+        Log.d("WorkoutTrackingActivity", "Pace settings: targetPace=$targetPace, " +
+                "targetDistance=$targetDistance, notificationInterval=$notificationInterval, " +
+                "paceTolerance=$paceTolerance")
 
         if (targetPace != null && notificationInterval != null && paceTolerance != null) {
+            paceStatusTextView.visibility = View.VISIBLE // Set to VISIBLE for debugging
+            paceStatusTextView.text = "Ожидание данных темпа..."
+        } else {
             paceStatusTextView.visibility = View.GONE
+            Log.w("WorkoutTrackingActivity", "Pace settings incomplete, notifications disabled")
         }
 
         // Инициализация шагомера
@@ -351,7 +369,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
                 intervalStartTime = totalTime
                 updateIntervalUI()
                 val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(longArrayOf(0, 200, 100, 200), -1) // Двойная вибрация
+                vibrator.vibrate(longArrayOf(0, 200, 100, 200), -1)
             } else {
                 intervalProgressText.text = "Все интервалы завершены!"
                 intervalProgressBar.progress = 100
@@ -386,16 +404,24 @@ class WorkoutTrackingActivity : AppCompatActivity() {
             val difference = currentPaceInSeconds - targetPaceInSeconds
 
             val message = when {
-                difference > paceTolerance!! -> "Стоит немного ускориться, текущее запоздание по темпу ${formatDifference(difference)}"
-                difference < -paceTolerance!! -> "Есть возможность немного сбавить темп, текущая спешка по темпу ${formatDifference(-difference)}"
-                else -> "Хорошая поддержка темпа, так держать!"
+                difference > paceTolerance!!
+                    -> "Стоит немного ускориться, текущее запоздание по темпу ${formatDifference(difference)}"
+                difference < -paceTolerance!!
+                    -> "Есть возможность немного сбавить темп, текущая спешка по темпу ${formatDifference(-difference)}"
+                else
+                    -> "Хорошая поддержка темпа, так держать!"
             }
 
             paceStatusTextView.text = message
+            Log.d("WorkoutTrackingActivity", "Pace notification: $message, distance=$distanceInKm, lastNotificationDistance=$lastNotificationDistance")
 
             // Вибрация
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibrator.vibrate(500)
+
+            if (::textToSpeech.isInitialized) {
+                textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null)
+            }
 
             lastNotificationDistance += notificationInterval!!
         }
@@ -403,12 +429,15 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         // Проверка завершения дистанции
         if (targetDistance != null && distanceInKm >= targetDistance!!) {
             paceStatusTextView.text = "Дистанция завершена!"
+            if (::textToSpeech.isInitialized) {
+                textToSpeech.speak("Дистанция завершена", TextToSpeech.QUEUE_FLUSH, null, null)
+            }
             stopWorkout()
         }
     }
 
     private fun calculateCurrentPace(): String {
-        val timeInMinutes = elapsedTime / 60000.0
+        val timeInMinutes = (SystemClock.elapsedRealtime() - startTime + elapsedTime) / 60000.0
         val distanceInKm = totalDistance / 1000
         if (distanceInKm > 0) {
             val paceInMinPerKm = timeInMinutes / distanceInKm
@@ -434,10 +463,8 @@ class WorkoutTrackingActivity : AppCompatActivity() {
 
     // Проверка разрешений на доступ к геолокации
     private fun checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission
-                .ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission
-                .ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             getLastKnownLocation()
         }
@@ -446,10 +473,8 @@ class WorkoutTrackingActivity : AppCompatActivity() {
     // Проверка разрешений на доступ к шагомеру
     private fun checkActivityRecognitionPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission
-                    .ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission
-                    .ACTIVITY_RECOGNITION), ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE)
             } else {
                 startStepCounter()
             }
@@ -464,21 +489,17 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager
-                        .PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLastKnownLocation()
                 } else {
-                    Toast.makeText(this, "Need location permission",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Need location permission", Toast.LENGTH_SHORT).show()
                 }
             }
             ACTIVITY_RECOGNITION_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager
-                        .PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startStepCounter()
                 } else {
-                    Toast.makeText(this, "Need activity recognition permission " +
-                            "for step counting", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Need activity recognition permission for step counting", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -502,8 +523,7 @@ class WorkoutTrackingActivity : AppCompatActivity() {
 
     // Получаем последнее известное местоположение
     private fun getLastKnownLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     Log.d("WorkoutTracking", "Текущие координаты: ${location.latitude}, ${location.longitude}")
@@ -560,9 +580,9 @@ class WorkoutTrackingActivity : AppCompatActivity() {
         }
 
         if (lastLocation != null) {
-            val distance = lastLocation!!.distanceTo(newLocation)  // Получаем расстояние в метрах
-            totalDistance += distance  // Прибавляем к общему расстоянию
-            distanceTextView.text = String.format("%.2f км", totalDistance / 1000)  // Обновляем UI
+            val distance = lastLocation!!.distanceTo(newLocation)
+            totalDistance += distance
+            distanceTextView.text = String.format("%.2f км", totalDistance / 1000)
         }
 
         lastLocation = newLocation  // Обновляем последнюю точку

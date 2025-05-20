@@ -110,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.0 ч"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <!-- Надпись -->
@@ -119,7 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="16sp"
+                            android:textSize="12sp"
                             android:text="Посл. 7 дней" />
 
                         <!-- Сообщение о трендах -->
