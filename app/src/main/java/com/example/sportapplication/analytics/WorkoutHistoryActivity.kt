@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sportapplication.data.Workout
@@ -28,6 +29,8 @@ class WorkoutHistoryActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var loadingTextView: TextView
+    private lateinit var workoutsRef: com.google.firebase.database.DatabaseReference
+    private lateinit var workoutAdapter: WorkoutAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,30 +40,40 @@ class WorkoutHistoryActivity : AppCompatActivity() {
         loadingTextView = findViewById(R.id.loadingTextView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        loadWorkouts()
-    }
-
-    private fun loadWorkouts() {
+        // Initialize Firebase reference
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
             Toast.makeText(this, "Пожалуйста, войдите в аккаунт", Toast.LENGTH_LONG).show()
             finish()
             return
         }
+        workoutsRef = FirebaseDatabase.getInstance().getReference("users/$userId/workouts")
+
+        loadWorkouts()
+    }
+
+    private fun loadWorkouts() {
+//        val userId = FirebaseAuth.getInstance().currentUser?.uid
+//        if (userId == null) {
+//            Toast.makeText(this, "Пожалуйста, войдите в аккаунт", Toast.LENGTH_LONG).show()
+//            finish()
+//            return
+//        }
 
         loadingTextView.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
 
-        val workoutsRef = FirebaseDatabase.getInstance().getReference("users/$userId/workouts")
+//        val workoutsRef = FirebaseDatabase.getInstance().getReference("users/$userId/workouts")
         workoutsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val workouts = mutableListOf<Workout>()
+                val workouts = mutableListOf<Pair<String, Workout>>()
                 for (child in snapshot.children) {
                     try {
                         val workoutDTO = child.getValue(WorkoutDTO::class.java)
                         if (workoutDTO != null) {
                             val workout = workoutDTO.toWorkout()
-                            workouts.add(workout)
+                            val workoutId = child.key ?: continue
+                            workouts.add(Pair(workoutId, workout))
                             Log.d("WorkoutHistory", "Loaded workoutDTO: $workoutDTO")
                             Log.d("WorkoutHistory", "Converted to workout: $workout")
                         } else {
@@ -72,14 +85,17 @@ class WorkoutHistoryActivity : AppCompatActivity() {
                 }
 
                 // Сортируем тренировки по времени
-                workouts.sortByDescending { it.timestamp }
+                workouts.sortByDescending { it.second.timestamp  }
 
                 if (workouts.isEmpty()) {
                     loadingTextView.text = "У вас пока нет тренировок"
                     loadingTextView.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
                 } else {
-                    recyclerView.adapter = WorkoutAdapter(workouts)
+                    workoutAdapter = WorkoutAdapter(workouts) { workoutId ->
+                        showDeleteConfirmationDialog(workoutId)
+                    }
+                    recyclerView.adapter = workoutAdapter
                     recyclerView.visibility = View.VISIBLE
                     loadingTextView.visibility = View.GONE
                 }
@@ -94,9 +110,34 @@ class WorkoutHistoryActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun showDeleteConfirmationDialog(workoutId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Удалить тренировку")
+            .setMessage("Вы уверены, что хотите удалить эту тренировку? Это действие нельзя отменить.")
+            .setPositiveButton("Удалить") { _, _ ->
+                deleteWorkout(workoutId)
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun deleteWorkout(workoutId: String) {
+        workoutsRef.child(workoutId).removeValue()
+            .addOnSuccessListener {
+                Log.d("WorkoutHistory", "Workout $workoutId deleted successfully")
+                Toast.makeText(this, "Тренировка удалена", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Log.e("WorkoutHistory", "Failed to delete workout $workoutId: ${e.message}", e)
+                Toast.makeText(this, "Ошибка при удалении тренировки", Toast.LENGTH_SHORT).show()
+            }
+    }
 }
 
-class WorkoutAdapter(private val workouts: List<Workout>) :
+class WorkoutAdapter(
+    private val workouts: List<Pair<String, Workout>>,
+    private val onLongClick: (String) -> Unit) :
     RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
     class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -112,7 +153,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        val workout = workouts.getOrNull(position) ?: run {
+        val (workoutId, workout) = workouts.getOrNull(position) ?: run {
             holder.titleTextView.text = "Ошибка: данные отсутствуют"
             holder.detailsTextView.text = ""
             holder.iconImageView.setImageResource(R.drawable.ic_walk)
@@ -135,6 +176,12 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
                 else -> R.drawable.ic_walk
             }
         )
+
+        // Добавляем обработчик долгого нажатия
+        holder.itemView.setOnLongClickListener {
+            onLongClick(workoutId)
+            true
+        }
     }
 
     override fun getItemCount(): Int = workouts.size

@@ -8,6 +8,9 @@
     tools:context=".workout.WorkoutFragment">
 
     <!-- Заголовок -->
+
+    <!-- Выбор активности -->
+
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -17,14 +20,16 @@
         android:text="Выберите активность"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/activitySelectionGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.141"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Выбор активности -->
     <RadioGroup
         android:id="@+id/activitySelectionGroup"
         android:layout_width="0dp"
+        android:layout_marginTop="12dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp"

@@ -112,7 +112,7 @@ class MainMenuFragment : Fragment() {
     }
 
     private fun setupActivityCalendar() {
-        dateTimeText.text = SimpleDateFormat("HH:mm 'Посл. 7 дней'", Locale.getDefault()).format(Date())
+        dateTimeText.text = SimpleDateFormat("Посл. 7 дней", Locale.getDefault()).format(Date())
 
         loadWorkoutsForLast7Days()
 
