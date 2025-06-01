@@ -52,3 +52,4 @@ data class FaqItem(
     val answer: String,
     var isExpanded: Boolean = false
 )
+

@@ -8,7 +8,8 @@ import com.example.sportapplication.databinding.ActivitySettingsBinding
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val sharedPreferences by lazy { getSharedPreferences("SettingsPrefs", Context.MODE_PRIVATE) }
+    private val sharedPreferences by lazy { getSharedPreferences("SettingsPrefs",
+        Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +21,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.notificationsSwitch.isChecked = areNotificationsEnabled
         binding.notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             sharedPreferences.edit().putBoolean("notifications_enabled", isChecked).apply()
-            // Здесь можно добавить логику для включения/выключения уведомлений (например, AlarmManager)
         }
     }
 }

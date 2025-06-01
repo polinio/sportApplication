@@ -9,13 +9,15 @@
         android:id="@+id/rbMale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Мужской"/>
+        android:text="Мужской"
+        android:buttonTint="@color/blue_500"/>
 
     <RadioButton
         android:id="@+id/rbFemale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Женский"/>
+        android:text="Женский"
+        android:buttonTint="@color/blue_500"/>
 
 
 </RadioGroup>

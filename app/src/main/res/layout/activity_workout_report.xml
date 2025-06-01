@@ -30,9 +30,9 @@
             android:id="@+id/trainingActivityType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="какая то активность"
-            android:textSize="18sp"
-            android:paddingStart="16dp"/>
+            android:paddingStart="16dp"
+            android:text="Активность"
+            android:textSize="18sp" />
 
         <!-- Карта маршрута -->
         <FrameLayout
@@ -212,7 +212,7 @@
             android:text="Вернуться"
             android:textSize="16sp"
             android:background="@drawable/button_style"
-            android:textColor="@color/blue_500"
+            android:textColor="@color/white"
             android:layout_marginTop="16dp" />
 
     </LinearLayout>

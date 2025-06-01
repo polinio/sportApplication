@@ -63,6 +63,8 @@
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue_500"
         android:text="Сохранить"
+        android:textColor="@color/white"
         android:layout_marginTop="16dp" />
 </LinearLayout>

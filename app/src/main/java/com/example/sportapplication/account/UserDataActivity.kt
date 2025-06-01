@@ -190,8 +190,10 @@ class UserDataActivity : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear) // Формат: dd-MM-yyyy
+        val datePickerDialog = DatePickerDialog(this, { _, selectedYear,
+                                                        selectedMonth, selectedDay ->
+            val formattedDate = String.format("%02d-%02d-%d", selectedDay,
+                selectedMonth + 1, selectedYear) // Формат: dd-MM-yyyy
             updateUserData("birthDate", formattedDate, tvBirthDate)
             tvBirthDate.text = formattedDate
         }, year, month, day)
@@ -199,25 +201,29 @@ class UserDataActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    // ! ---
+    // Обновление данных пользователя
     private fun updateUserData(field: String, value: String, textView: TextView) {
         if (!validateInput(field, value)) {
             Toast.makeText(this, "Ошибка: некорректный ввод", Toast.LENGTH_SHORT).show()
             return
         }
 
-        textView.text = value // Сразу обновляем UI
+        textView.text = value // Сразу обновлется UI
 
-        // Сохраняем в кэш и помечаем как несинхронизированное
-        saveToCache(field, value,true) // Третий аргумент true - помечаем как несинхронизированное
+        // Сохранение в кэш и пометка как несинхронизированное
+        saveToCache(field, value,true) // Третий аргумент true -
+        // пометка как несинхронизированное
 
         if (isInternetAvailable()) {
-            // Если есть интернет - сразу синхронизируем
+            // Если есть интернет - сразу выполняется синхронизация
             syncSingleFieldWithFirebase(field, value)
         } else {
-            Toast.makeText(this, "Данные сохранены локально и будут синхронизированы при подключении", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Данные сохранены локально " +
+                    "и будут синхронизированы при подключении", Toast.LENGTH_LONG).show()
         }
     }
+
+    // Синхронизация отдельного поля с Firebase
     private fun syncSingleFieldWithFirebase(field: String, value: String) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
@@ -231,7 +237,7 @@ class UserDataActivity : AppCompatActivity() {
             }
     }
 
-    // ! ---
+    // Синхронизация всех несинхронизированных данных с Firebase
     private fun syncCachedDataWithFirebase() {
         val userId = firebaseAuth.currentUser?.uid ?: return
 

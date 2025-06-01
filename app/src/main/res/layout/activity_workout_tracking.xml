@@ -189,7 +189,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/button_style"
                 android:text="Пауза"
-                android:textColor="@color/blue_border"
+                android:textColor="@color/white"
                 android:textSize="10sp" />
 
             <Button
@@ -198,8 +198,9 @@
                 android:layout_height="wrap_content"
                 android:text="Остановить"
                 android:textSize="10sp"
-                android:textColor="@color/blue_border"
                 android:background="@drawable/button_style"
+                android:backgroundTint="#F44336"
+                android:textColor="@color/white"
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
         <TextView

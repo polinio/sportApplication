@@ -32,8 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Имя:"
+            android:textColor="@color/blue_700"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvName"
@@ -62,8 +63,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Пол:"
+            android:textColor="@color/blue_700"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvGender"
@@ -92,8 +94,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Рост (см):"
+            android:textColor="@color/blue_700"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvHeight"
@@ -122,8 +125,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Вес (кг):"
+            android:textColor="@color/blue_700"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvWeight"
@@ -152,8 +156,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Дата рождения:"
+            android:textColor="@color/blue_700"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvBirthDate"

@@ -70,9 +70,11 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(this, "Письмо для сброса пароля отправлено", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Письмо для сброса пароля отправлено",
+                                Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(this, "Ошибка: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Ошибка: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
             } else {
