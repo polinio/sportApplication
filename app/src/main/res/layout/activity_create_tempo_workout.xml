@@ -1,70 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/gray">
 
-    <EditText
-        android:id="@+id/distanceEditText"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Дистанция (км)"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp" />
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/paceMinutesEditText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="минут"
-            android:inputType="number"
-            android:minHeight="48dp"/>
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=":"
-            android:textSize="20sp" />
+            <!-- Заголовок формы -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Настройка целевых параметров"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/paceSecondsEditText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="секунд"
-            android:inputType="number"
-            android:minHeight="48dp"/>
-    </LinearLayout>
+            <!-- Целевая дистанция -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Целевая дистанция (км):"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="4dp" />
 
-    <Spinner
-        android:id="@+id/intervalSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:minHeight="48dp" />
+            <EditText
+                android:id="@+id/distanceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Например: 5.5"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/toleranceEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Погрешность темпа (сек)"
-        android:inputType="number"
-        android:minHeight="48dp" />
+            <!-- Темп -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Целевой темп (мин/км):"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp" />
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/blue_500"
-        android:text="Сохранить"
-        android:textColor="@color/white"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/paceMinutesEditText"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Минут"
+                    android:inputType="number"
+                    android:minHeight="48dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="4dp" />
+
+                <EditText
+                    android:id="@+id/paceSecondsEditText"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Секунд"
+                    android:inputType="number"
+                    android:minHeight="48dp"/>
+            </LinearLayout>
+
+            <!-- Частота оповещений -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Частота оповещений (интервал в км):"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/intervalSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp" />
+
+            <!-- Погрешность темпа -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Допустимая погрешность темпа (в секундах):"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/toleranceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Например: 10"
+                android:inputType="number"
+                android:minHeight="48dp" />
+
+            <!-- Кнопка -->
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сохранить"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/blue_500"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>

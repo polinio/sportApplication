@@ -62,27 +62,58 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.saveButton).setOnClickListener {
-            val distance = distanceEditText.text.toString().toDoubleOrNull()
-            val minutes = paceMinutesEditText.text.toString().toIntOrNull()
-            val seconds = paceSecondsEditText.text.toString().toIntOrNull()
+            var valid = true
+
+            val distanceStr = distanceEditText.text.toString().trim()
+            val distance = distanceStr.toDoubleOrNull()
+            if (distance == null || distance <= 0 || distance > 100.0) {
+                distanceEditText.error = "Введите дистанцию (0–100 км)"
+                valid = false
+            } else {
+                distanceEditText.error = null
+            }
+
+            val minutesStr = paceMinutesEditText.text.toString().trim()
+            val secondsStr = paceSecondsEditText.text.toString().trim()
+            val minutes = minutesStr.toIntOrNull()
+            val seconds = secondsStr.toIntOrNull()
+
+            val totalPaceSeconds = if (minutes != null && seconds != null) (minutes * 60 + seconds) else 0
+
+            if (minutes == null || minutes < 0) {
+                paceMinutesEditText.error = "Минуты ≥ 0"
+                valid = false
+            } else {
+                paceMinutesEditText.error = null
+            }
+
+            if (seconds == null || seconds !in 0..59) {
+                paceSecondsEditText.error = "Секунды: 0–59"
+                valid = false
+            } else {
+                paceSecondsEditText.error = null
+            }
+
+            if (totalPaceSeconds == 0) {
+                paceMinutesEditText.error = "Темп не может быть 0:00"
+                paceSecondsEditText.error = "Темп не может быть 0:00"
+                valid = false
+            }
+
+            val toleranceStr = toleranceEditText.text.toString().trim()
+            val tolerance = toleranceStr.toIntOrNull()
+            if (tolerance == null || tolerance <= 0) {
+                toleranceEditText.error = "Погрешность должна быть > 0"
+                valid = false
+            } else {
+                toleranceEditText.error = null
+            }
+
+            if (!valid) return@setOnClickListener
+
+            val pace = String.format("%d:%02d", minutes!!, seconds!!)
             val interval = intervalSpinner.selectedItem.toString()
-            val tolerance = toleranceEditText.text.toString().toIntOrNull()
 
-            // Валидация ввода
-            if (distance == null || distance <= 0) {
-                Toast.makeText(this, "Введите корректную дистанцию (> 0 км)", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (minutes == null || seconds == null || seconds !in 0..59) {
-                Toast.makeText(this, "Введите корректный темп (минуты и секунды 0-59)", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (tolerance == null || tolerance < 0) {
-                Toast.makeText(this, "Введите корректную погрешность (>= 0 сек)", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val pace = String.format("%d:%02d", minutes, seconds)
             val intent = Intent().apply {
                 putExtra("distance", distance)
                 putExtra("pace", pace)
@@ -92,5 +123,6 @@ class CreateTempoWorkoutActivity : AppCompatActivity() {
             setResult(RESULT_OK, intent)
             finish()
         }
+
     }
 }

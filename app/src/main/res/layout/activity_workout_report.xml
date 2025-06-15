@@ -46,10 +46,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="3dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="Дата и время:"
                 android:layout_weight="1"
                 android:textSize="18sp"/>
@@ -67,10 +68,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="3dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="Расстояние (км):"
                 android:layout_weight="1"
                 android:textSize="18sp"/>
@@ -87,10 +89,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="3dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="Длительность:"
                 android:layout_weight="1"
                 android:textSize="18sp"/>
@@ -107,10 +110,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="3dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="Средний темп (мин/км):"
                 android:layout_weight="1"
                 android:textSize="18sp"/>
@@ -127,10 +131,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="3dp">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="Калории:"
                 android:layout_weight="1"
                 android:textSize="18sp"/>
@@ -147,10 +152,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="3dp">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="Шаги:"
                     android:layout_weight="1"
                     android:textSize="18sp"/>
@@ -167,10 +173,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="3dp">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:text="Средняя длина шага:"
                     android:layout_weight="1"
                     android:textSize="18sp"/>

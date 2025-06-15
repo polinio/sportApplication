@@ -81,10 +81,13 @@ class CreateIntervalWorkoutActivity : AppCompatActivity() {
                 Toast.makeText(this, "Добавьте хотя бы один интервал", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (intervals.any { it.targetDistance <= 0.0 }) {
-                Toast.makeText(this, "Все расстояния должны быть больше 0", Toast.LENGTH_SHORT).show()
+
+            val hasErrors = intervals.any { it.targetDistance <= 0.0 }
+            if (hasErrors) {
+                Toast.makeText(this, "Проверьте введённые расстояния", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val intent = Intent().apply {
                 putParcelableArrayListExtra("intervals", ArrayList(intervals))
             }
@@ -151,15 +154,30 @@ class IntervalAdapter(
         }
 
         // Настройка расстояния
-        holder.distanceEditText.setText(if (interval.targetDistance == 0.0) ""
-        else interval.targetDistance.toString())
+        holder.distanceEditText.setText(
+            if (interval.targetDistance == 0.0) ""
+            else interval.targetDistance.toString())
 
         holder.distanceEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                val distance = s.toString().toDoubleOrNull() ?: 0.0
-                intervals[position] = intervals[position].copy(targetDistance = distance)
+                val text = s?.toString()?.trim()
+                val distance = text?.toDoubleOrNull()
+
+                if (text.isNullOrEmpty()) {
+                    holder.distanceEditText.error = "Введите расстояние"
+                    intervals[position] = intervals[position].copy(targetDistance = 0.0)
+                } else if (distance == null || distance <= 0.0) {
+                    holder.distanceEditText.error = "Расстояние должно быть положительным числом"
+                    intervals[position] = intervals[position].copy(targetDistance = 0.0)
+                } else if (distance > 100.0) {
+                    holder.distanceEditText.error = "Слишком большое значение (макс. 100 км)"
+                    intervals[position] = intervals[position].copy(targetDistance = 0.0)
+                } else {
+                    holder.distanceEditText.error = null
+                    intervals[position] = intervals[position].copy(targetDistance = distance)
+                }
             }
         })
 
